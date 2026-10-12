@@ -1,0 +1,5 @@
+[33m5e0de4b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Add scheduled Steam price monitoring
+[33m5a82ec4[m Add automated tests and GitHub Actions CI
+[33m94bc3e9[m Merge initial GitHub files
+[33mc99ed7c[m Initial commit
+[33m9d7f868[m Initial Price Drop Tracker application
