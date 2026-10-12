@@ -1,0 +1,12 @@
+.git
+.github
+.venv
+venv
+__pycache__
+.pytest_cache
+.vscode
+tests
+*.db
+*.sqlite3
+.env
+price_state.json
