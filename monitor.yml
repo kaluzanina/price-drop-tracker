@@ -1,0 +1,63 @@
+
+name: Automatic Price Monitoring
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: price-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+
+      - name: Check Steam prices
+        id: price_check
+        continue-on-error: true
+        run: |
+          python monitor.py
+
+      - name: Save latest prices
+        run: |
+          if [ ! -f price_state.json ]; then
+            echo "No price data to save."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add price_state.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update monitored prices [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "No price changes to commit."
+          fi
+
+      - name: Report API failures
+        if: steps.price_check.outcome == 'failure'
+        run: exit 1
